@@ -38,8 +38,6 @@ public:
 	//ofVideoPlayer vids[4];
 	ofVideoPlayer vid;
 
-	//ofxCvColorImage imgs[4];
-	//ofxCvGrayscaleImage imgs[4];
 	ofImage imgs[4];
 
 	std::vector<ofRectangle> frames;
@@ -52,7 +50,6 @@ public:
 	int vidHOrig;
 
 	ofImage imgMerged;
-	//ofxCvGrayscaleImage imgMerged;
 	ofRectangle vidSpace;
 	ofPoint pntVid[4];
 

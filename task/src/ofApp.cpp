@@ -2,60 +2,65 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofSetVerticalSync(true);
-
-	fbo.allocate(1280, 700, GL_RGBA);
-
 	string srcvid="movies/scene.avi";
 	//string srcvid="movies/ISTrailer.mp4";
 
-	vid.load(srcvid);
-	vid.setLoopState(OF_LOOP_NORMAL);
-	vid.play();
+	if(vid.load(srcvid)){
 
-	vidWOrig=vid.getWidth();
-	vidHOrig=vid.getHeight();
+		ofSetVerticalSync(true);
 
-	vidW=vidWOrig*0.6;
-	vidH=vidHOrig*0.6;
+		fbo.allocate(1280, 700, GL_RGBA);
 
-	for(int i=0; i<4; i++){
-		imgs[i].allocate(vidWOrig, vidHOrig, OF_IMAGE_GRAYSCALE);
-		//imgs[i].allocate(vidW, vidH);
+		vid.setLoopState(OF_LOOP_NORMAL);
+		vid.play();
+
+		vidWOrig=vid.getWidth();
+		vidHOrig=vid.getHeight();
+
+		vidW=vidWOrig*0.6;
+		vidH=vidHOrig*0.6;
+
+		for(int i=0; i<4; i++){
+			imgs[i].allocate(vidWOrig, vidHOrig, OF_IMAGE_GRAYSCALE);
+			//imgs[i].allocate(vidW, vidH);
+		}
+	//	imgs[0].crop(0, 0, vidW*0.6, vidH*0.6);
+	//	imgs[1].crop(vidW*0.4, 0, vidW*0.6, vidH*0.6);
+	//	imgs[2].crop(0, vidH*0.4, vidW*0.6, vidH*0.6);
+	//	imgs[3].crop(vidW*0.4,vidH*0.4, vidW*0.6, vidH*0.6);
+
+	//	vidW*=0.6;
+	//	vidH*=0.6;
+
+		// videos map:
+		//	1	2
+		//	3	4
+		pntVid[0]=ofPoint(offset, offset);
+		pntVid[1]=pntVid[0]+ofPoint(vidW, 0);
+		pntVid[2]=pntVid[0]+ofPoint(0, vidH);
+		pntVid[3]=pntVid[0]+ofPoint(vidW, vidH);
+
+
+		for(int i=0; i<4; i++){
+			frames.push_back(ofRectangle(pntVid[i], pntVid[i]+ofPoint(vidW, vidH)));
+		}
+
+		vidSpace=getBoundaryRct(frames);
+
+		drawDrag=false;
+
+		updateFrames();
+
+	//	gui.setup();
+	//	for(int i=0; i<4; i++){
+	//		// from where to get screen size?
+	//		gui.add(vidXSlider[i].setup("vid" + ofToString(i+1) + " x", pntVid[i].x, 0, 1280));
+	//		gui.add(vidYSlider[i].setup("vid" + ofToString(i+1) + " y", pntVid[i].y, 0, 700));
+	//	}
 	}
-//	imgs[0].crop(0, 0, vidW*0.6, vidH*0.6);
-//	imgs[1].crop(vidW*0.4, 0, vidW*0.6, vidH*0.6);
-//	imgs[2].crop(0, vidH*0.4, vidW*0.6, vidH*0.6);
-//	imgs[3].crop(vidW*0.4,vidH*0.4, vidW*0.6, vidH*0.6);
-
-//	vidW*=0.6;
-//	vidH*=0.6;
-
-	// videos map:
-	//	1	2
-	//	3	4
-	pntVid[0]=ofPoint(offset, offset);
-	pntVid[1]=pntVid[0]+ofPoint(vidW, 0);
-	pntVid[2]=pntVid[0]+ofPoint(0, vidH);
-	pntVid[3]=pntVid[0]+ofPoint(vidW, vidH);
-
-
-	for(int i=0; i<4; i++){
-		frames.push_back(ofRectangle(pntVid[i], pntVid[i]+ofPoint(vidW, vidH)));
+	else{
+		ofExit();
 	}
-
-	vidSpace=getBoundaryRct(frames);
-
-	drawDrag=false;
-
-	updateFrames();
-
-//	gui.setup();
-//	for(int i=0; i<4; i++){
-//		// from where to get screen size?
-//		gui.add(vidXSlider[i].setup("vid" + ofToString(i+1) + " x", pntVid[i].x, 0, 1280));
-//		gui.add(vidYSlider[i].setup("vid" + ofToString(i+1) + " y", pntVid[i].y, 0, 700));
-//	}
 }
 
 //--------------------------------------------------------------
